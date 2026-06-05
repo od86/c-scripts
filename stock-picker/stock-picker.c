@@ -1,5 +1,6 @@
 #include <stdio.h>
 
+// Takes an array and works out best days to buy sell
 int main() {
   int stockPrices[] = {17, 3, 6, 9, 15, 8, 6, 1, 19};
   int buyDay = 0;
