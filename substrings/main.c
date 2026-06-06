@@ -13,14 +13,14 @@ int main() {
   char str[] = "Hello World";
 
   char words[sizeof(str) / 2][sizeof(str)];
-  int wordCounter = 0;
+  int word_counter = 0;
 
   for (int i = 0; i < strlen(str); i++)
   {
     if (isalpha(str[i])) {
-      words[wordCounter][i] = str[i];
+      words[word_counter][i] = str[i];
     } else {
-      wordCounter++;
+      word_counter++;
       continue;
     }
   }
@@ -35,4 +35,6 @@ int main() {
     }
     printf("\n");
   }
+
+  return 0;
 }  
