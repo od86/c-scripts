@@ -25,8 +25,42 @@ void show_menu() {
   printf(" +----------------+-----+\n\n");
 }
 
-void delete_student(int num_of_students, Student *students) {
+void show_students(int num_of_students, Student *students) {
+  printf(" STUDENTS:\n");
 
+  for (int i = 0; i < num_of_students; i++)
+  {
+    printf(" Id: %i | Name: %s | Age: %i\n", 
+      students[i].id, 
+      students[i].name,
+      students[i].age);
+  }
+
+  printf("\n");
+}
+
+Student *delete_student(int num_of_students, Student *students) {
+  int id;
+  printf(" Student id: ");
+  scanf("%i", &id);
+
+  Student *new_students = (Student *)malloc((num_of_students - 1) * sizeof(students));
+
+  int new_student_count = 0;
+
+  for (int i = 0; i < num_of_students + 1; i++)
+  {
+    if (students[i].id != id)
+    {
+      new_students[new_student_count] = students[i];
+      new_student_count++;
+    }
+  }
+
+  students = new_students;
+
+  printf("\n --- STUDENT DELETED --- \n\n");
+  return students;
 }
 
 void find_by_id(int num_of_students, Student *students) {
@@ -54,20 +88,6 @@ void find_by_id(int num_of_students, Student *students) {
   if(student_exists == false) {
     printf(" NO STUDENTS HAVE AN ID OF %i\n\n", id);
   }
-}
-
-void show_students(int num_of_students, Student *students) {
-  printf(" STUDENTS:\n");
-
-  for (int i = 0; i < num_of_students; i++)
-  {
-    printf(" Id: %i | Name: %s | Age: %i\n", 
-      students[i].id, 
-      students[i].name,
-      students[i].age);
-  }
-
-  printf("\n");
 }
 
 Student create_student(int num_of_students) {
@@ -105,37 +125,42 @@ void main_loop(int num_of_students, Student *students) {
   int choice;
 
   printf(" Enter number of what you'd like to do: ");
-  scanf("%i", &choice);
+  scanf("%d", &choice);
+  while (getchar() != '\n');
 
-  printf("\e[%iA\e[J", lines_to_clear);
-  lines_to_clear = 1;
+  // printf("\e[%iA\e[J", lines_to_clear);
+  // lines_to_clear = 1;
 
   if (choice == 0) 
   {
-    lines_to_clear = 3 + num_of_students;
+    // lines_to_clear = 3 + num_of_students;
     show_students(num_of_students, students);
     main_loop(num_of_students, students);
   } 
   else if (choice == 1)
   {
-    lines_to_clear = 4;
+    // lines_to_clear = 4;
     students = add_student(num_of_students, students);
     num_of_students++;
     main_loop(num_of_students, students);
   } 
   else if (choice == 2)
   {
-    lines_to_clear = 6;
+    // lines_to_clear = 6;
     find_by_id(num_of_students, students);
     main_loop(num_of_students, students);
   }
   else if (choice == 3)
   {
-    lines_to_clear = 1;
+    // lines_to_clear = 5;
+    students = delete_student(num_of_students, students);
+    num_of_students--;
     main_loop(num_of_students, students);
   }
   else 
   {
+    free(students);
+    students = NULL;
     printf(" --- EXITING PROGRAM ---\n\n");
   }
 }
