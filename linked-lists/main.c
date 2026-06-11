@@ -23,8 +23,53 @@ void print_list(struct Node *node) {
   {
     printf("( %i ) --> ", node->value);
     print_list(node->next);
-  } else {
+  } 
+  else 
+  {
     printf("( NULL )\n");
+  }
+}
+
+int list_size(struct Node *node, int length) {
+  if (node != NULL)
+  {
+    length++;
+    list_size(node->next, length);
+  } 
+  else 
+  {
+    return length;
+  }
+}
+
+void insert_at(struct Node *head) {
+  struct Node *node = append();
+  int index;
+
+  printf("Enter index (0 based): ");
+  scanf("%i", &index);
+
+  int length = list_size(head, 0);
+
+  if (index > 0 || index < length)
+  {
+    printf("Must enter a number between 0 and %i (inclusive)", length);
+  }
+
+  int tracker = 0;
+}
+
+struct Node *find_by_index(struct Node *node, int index, int tracker) {
+  if (index == tracker)
+  {
+    return node;
+  } 
+  else if (node == NULL)
+  {
+    return NULL;
+  } else {
+    tracker++;
+    find_by_index(node, index, tracker);
   }
 }
 
@@ -61,12 +106,17 @@ void main_loop(struct Node *head, struct Node *tail) {
       tail = node;
       break;
     case 3:
-      // insert_at
       break;
     case 4:
-      // remove_at
+      // insert_at
       break;
     case 5:
+      // remove_at
+      break;
+    case 6:
+      printf("List size: %i\n", list_size(head, 0));
+      break;
+    case 7:
       free_list(head);
       printf("\n --- STOPPING PROGRAM ---\n\n");
       return;
@@ -89,3 +139,7 @@ int main() {
   return 0;
 }
 
+// To do
+// create find by index so a user can enter a value between 0 and list_size()
+// find the node at that index, head has an index of 0, head->next has an index of 2, etc
+// use this to create insert_at
