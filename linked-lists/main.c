@@ -7,78 +7,64 @@ struct Node
   struct Node *next;
 };
 
-// Frees allocated memory
+// Frees all linked list memory
 void free_list(struct Node *node) {
   if (node != NULL)
   {
-    printf(" Node %p - FREE\n", node);
     free_list(node->next);
+    printf("Freed node %p\n", node);
     free(node);
   }
 }
 
-// // Prints every nodes value in the list
-void print_list(struct Node *node) {
-  if (node != NULL)
-  {
-    printf("( %i ) --> ", node->value);
-    print_list(node->next);
-  } 
-  else 
-  {
-    printf("( NULL )\n");
-  }
-}
+// Gets the length of the list
+int list_length(struct Node *node) {
+  int length = 0;
 
-int list_size(struct Node *node, int length) {
-  if (node != NULL)
+  while (node != NULL)
   {
     length++;
-    list_size(node->next, length);
-  } 
-  else 
+    node = node->next;
+  }
+
+  return length;
+}
+
+// Prints the size of list
+void size_of_list(struct Node *head) {
+  int length = list_length(head);
+  printf("List length = %i\n", length);
+}
+
+// Finds node at specific index
+struct Node *find_by_index(struct Node *node, int index) {
+  int tracker = 0;
+
+  while (node != NULL)
   {
-    return length;
+    if (tracker == index) {
+      return node;
+    }
+
+    tracker++;
+    node = node->next;
   }
 }
 
-void insert_at(struct Node *head) {
-  struct Node *node = append();
+// Prints node user wants
+void find_node(struct Node *head) {
   int index;
 
-  printf("Enter index (0 based): ");
+  printf("Enter node index (0 based): ");
   scanf("%i", &index);
 
-  int length = list_size(head, 0);
+  struct Node *node = find_by_index(head, index);
 
-  if (index > 0 || index < length)
-  {
-    printf("Must enter a number between 0 and %i (inclusive)", length);
-  }
-
-  int tracker = 0;
+  printf("Index %i found node %p with value %i\n", index, node, node->value);
 }
 
-struct Node *find_by_index(struct Node *node, int index, int tracker) {
-  if (index == tracker)
-  {
-    return node;
-  } 
-  else if (node == NULL)
-  {
-    return NULL;
-  } else {
-    tracker++;
-    find_by_index(node, index, tracker);
-  }
-}
-
-struct Node *append() {
-  int value;
-
-  printf(" Enter value for node: ");
-  scanf("%i", &value);
-
+// Creates a new node
+struct Node *create_node(int value) {
   struct Node *node = (struct Node *)malloc(sizeof(struct Node));
   node->value = value;
   node->next = NULL;
@@ -86,11 +72,45 @@ struct Node *append() {
   return node;
 }
 
+// Adds node to the linked list
+void append_node(struct Node **head, struct Node **tail) {
+  int value;
+
+  printf("Enter node value: ");
+  scanf("%i", &value);
+
+  // Create the new node
+  struct Node *new_node = create_node(value);
+  printf("Created Node %p with value %i\n", new_node, new_node->value);
+
+  // For when no nodes exist
+  if (*head == NULL) {
+    *tail = new_node;
+    *head = *tail;
+    return;
+  }
+
+  struct Node *prev_tail = *tail;
+  prev_tail->next = new_node;
+  *tail = new_node;
+}
+
+// Prints all node values in the list
+void print_list(struct Node *node) {
+  while (node != NULL)
+  {
+    printf("( %i ) -> ", node->value);
+    node = node->next;
+  }
+  
+  printf("( NULL )\n");
+}
+
 void main_loop(struct Node *head, struct Node *tail) {
   while (1)
   {
     int choice;
-    printf("\n Choose option: ");
+    printf("\nChoose option: ");
     scanf("%i", &choice);
 
     switch (choice)
@@ -99,47 +119,37 @@ void main_loop(struct Node *head, struct Node *tail) {
       print_list(head);
       break;
     case 2:
-      // Sets tail->next to the new node
-      // Sets tail the new node
-      struct Node *node = append();
-      tail->next = node;
-      tail = node;
+      append_node(&head, &tail);
       break;
     case 3:
-      break;
-    case 4:
-      // insert_at
-      break;
-    case 5:
-      // remove_at
+      find_node(head);
       break;
     case 6:
-      printf("List size: %i\n", list_size(head, 0));
+      size_of_list(head);
       break;
     case 7:
       free_list(head);
-      printf("\n --- STOPPING PROGRAM ---\n\n");
       return;
     default:
-      "Enter number between 1 and 5";
+      printf("Enter a number between 1 and 7");
       break;
     }
   }
 }
 
 int main() {
-  printf("\n --- STARTING PROGRAM ---\n\n");
-
-  struct Node *head = (struct Node *)malloc(sizeof(struct Node));
-  head = append();
-  struct Node *tail = head;
-
+  struct Node *head;
+  struct Node *tail;
+  append_node(&head, &tail);
   main_loop(head, tail);
   
   return 0;
 }
 
-// To do
-// create find by index so a user can enter a value between 0 and list_size()
-// find the node at that index, head has an index of 0, head->next has an index of 2, etc
-// use this to create insert_at
+// Case 1 = print all nodes
+// Case 2 = create node
+// Case 3 = find by index
+// Case 4 = insert at index
+// Case 5 = remove at index
+// Case 6 = list size
+// Case 7 = free list and end program
