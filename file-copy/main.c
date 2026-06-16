@@ -1,47 +1,41 @@
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-void read_file(FILE *file) {
-  file = fopen("test.txt", "r");
+int main(int argc) {
+  printf("Enter name of file a: ");
+  // get file name a
+  printf("Enter name of file b: ");
+  // get file name b
 
-  if (file == NULL)
+  // open file a and b
+  FILE *file_a = fopen("a.txt", "r");
+  FILE *file_b = fopen("b.txt", "w");
+
+  if (file_a == NULL || file_b == NULL)
   {
-    printf("Failed to open file when attempting to read\n");
+    if (file_a == NULL)
+      printf("Failed to open file a while attempting to read.\n");
+
+    if (file_b == NULL)
+      printf("Failed to open file b while attempting to write.\n");
+
     exit(0);
   }
 
   while (1)
   {
-    char c = fgetc(file);
+    char c = fgetc(file_a);
 
-    if (feof(file))
+    if (feof(file_a))
       break;
 
-    printf("%c", c);
+    fputc(c, file_b);
   }
 
-  fclose(file);
-}
-
-void write_to_file(FILE *file) {
-  file = fopen("test.txt", "w");
-
-  if (file == NULL)
-  {
-    printf("Failed to open file when attempting to write\n");
-    exit(0);
-  }
-
-  fprintf(file, " Mankind's greatest fear is mankind itself.\n");
-  fprintf(file, "  - Gendo Ikari\n");
-
-  fclose(file);
-}
-
-int main(int argc, FILE* argv[]) {
-  FILE *file = argv[0];
-  write_to_file(file);
-  read_file(file);
+  fclose(file_a);
+  fclose(file_b);
 
   return 0;
 }
