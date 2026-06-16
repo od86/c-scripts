@@ -1,35 +1,47 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int main(int argc, FILE* argv[]) {
-  FILE *file_one = argv[0];
-  file_one = fopen("file_one.txt", "wb+");
+void read_file(FILE *file) {
+  file = fopen("test.txt", "r");
 
-  if (file_one == NULL)
+  if (file == NULL)
   {
-    printf("Failed to open file\n");
+    printf("Failed to open file when attempting to read\n");
     exit(0);
-  }  
-
-  fprintf(file_one, "hey there its been a while\n");
-  fprintf(file_one, "dodge this\n");
-
-  char c = fgetc(file_one);
-
-  if (c == EOF)
-  {
-    if (feof(file_one) == EOF)
-      printf("End of File\n");
-    else
-      printf("Unable to Read\n");
   }
 
-  while (c != EOF)
+  while (1)
   {
+    char c = fgetc(file);
+
+    if (feof(file))
+      break;
+
     printf("%c", c);
   }
-  
-  fclose(file_one);
+
+  fclose(file);
+}
+
+void write_to_file(FILE *file) {
+  file = fopen("test.txt", "w");
+
+  if (file == NULL)
+  {
+    printf("Failed to open file when attempting to write\n");
+    exit(0);
+  }
+
+  fprintf(file, " Mankind's greatest fear is mankind itself.\n");
+  fprintf(file, "  - Gendo Ikari\n");
+
+  fclose(file);
+}
+
+int main(int argc, FILE* argv[]) {
+  FILE *file = argv[0];
+  write_to_file(file);
+  read_file(file);
 
   return 0;
 }
